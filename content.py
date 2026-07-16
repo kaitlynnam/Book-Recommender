@@ -21,40 +21,8 @@ cleaned_data["combined_features"] = (
 
 feature_vectors = vectorizer.fit_transform(cleaned_data["combined_features"])
 
-#print(feature_vectors[1])
-
 similarity = cosine_similarity(feature_vectors, feature_vectors)
-#print(similarity[2])
-#print(len(similarity))
 
-#SVD
-svd = TruncatedSVD(n_components=2)
-
-features_red = svd.fit_transform(feature_vectors)
-
-normalizer = Normalizer()
-
-features_red = normalizer.fit_transform(features_red)
-
-km = KMeans(n_clusters=30)
-labels = km.fit_predict(features_red)
-
-print(labels)
-
-# plt.scatter(features_red[:,0], features_red[:,1], c=labels)
-# plt.show()
-
-cleaned_data["cluster"] = labels
-
-# for cluster in range(70):
-#     print(f"\nCluster {cluster}")
-#     print(cleaned_data[cleaned_data.cluster == cluster]["title"].head())
-
-
-#Heatmap of similarity for cosine similarity
-# plt.imshow(similarity, cmap='viridis')
-# plt.colorbar()
-# plt.show()
 
 
 list_of_all_titles = cleaned_data['title'].tolist()
@@ -86,7 +54,6 @@ def recommend(book_name):
 def recommend_str(books: list[str]):
 
     favorite_texts = []
-    favorite_clusters = []
 
     for book in books:
         find_close_match = difflib.get_close_matches(book, list_of_all_titles)
@@ -115,27 +82,17 @@ def recommend_str(books: list[str]):
     sorted_similar_books = sorted( similarity_score, key=lambda x: x[1], reverse=True)
 
     i = 1
-    cluster_tally = {}
+    print("\n")
 
     for book in sorted_similar_books:
         index = book[0]
         title_from_index = cleaned_data[cleaned_data.index==index]['title'].values[0]
-        cluster = cleaned_data[cleaned_data.index==index]['categories'].values[0]
         
-        if(i<= 40):
+        if(i<= 20):
             print(i, ".", title_from_index)
-            favorite_clusters.append(int(cleaned_data[cleaned_data.index==index]['cluster'].values[0]))
-
-            if cluster in cluster_tally:
-                cluster_tally[cluster] += 1
-            else:
-                cluster_tally[cluster] = 1
-
             i+=1
 
-    #print(favorite_clusters)
-    sorted_cluster_tally = sorted(cluster_tally.items(), key=lambda x: x[1], reverse=True)
-    print(sorted_cluster_tally)
+    
 
 
         

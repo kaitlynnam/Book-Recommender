@@ -2,7 +2,7 @@ import content
 import pandas as pd
 import os
 
-book = input("\nWhat is your favorite book? \n")
+book = input("\nWhat is your favorite book? \n\n")
 
 if os.path.exists("favorite_books.csv"):
     favorite_books = pd.read_csv("favorite_books.csv")
@@ -13,7 +13,12 @@ favorite_books.loc[len(favorite_books)] = [book, None]
 
 favorite_books.to_csv("favorite_books.csv", index=False)
 
-print(pd.read_csv("favorite_books.csv")["title"].tolist())
+favorite_books_list = pd.read_csv("favorite_books.csv")["title"].tolist()
+
+print("\nYour Favorite Books Are: \n")
+for book in favorite_books_list:
+    print(book)
+
 
 print("\nHere Are My Top 20 Recommendations:\n")
 
