@@ -28,6 +28,8 @@ cleaned["combined_features"] = (
       books["description"]
   )
 
+
+
 cleaned = cleaned.dropna(subset=['combined_features'])
 print(len(cleaned))
 
